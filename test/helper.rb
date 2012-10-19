@@ -47,10 +47,18 @@ require File.join(ROOT, 'lib', 'paperclip.rb')
 require './shoulda_macros/paperclip'
 
 FIXTURES_DIR = File.join(File.dirname(__FILE__), "fixtures")
-config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
+# config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
 ActiveRecord::Base.logger = ActiveSupport::BufferedLogger.new(File.dirname(__FILE__) + "/debug.log")
-ActiveRecord::Base.establish_connection(config['test'])
+# ActiveRecord::Base.establish_connection(config['test'])
 Paperclip.options[:logger] = ActiveRecord::Base.logger
+
+def reset_connection
+  config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
+  ActiveRecord::Base.establish_connection(config['test'])
+end
+
+reset_connection
+
 
 def require_everything_in_directory(directory_name)
   Dir[File.join(File.dirname(__FILE__), directory_name, '*')].each do |f|
